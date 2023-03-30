@@ -1,5 +1,0 @@
-spring:
-  application:
-    name: oh-my-oa
-  profiles:
-    active: dev
