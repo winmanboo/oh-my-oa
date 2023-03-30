@@ -11,12 +11,18 @@
           </el-col>
         </el-row>
         <el-row style="display:flex">
+          <el-button type="success" icon="el-icon-plus" size="mini" @click="add">添 加</el-button>
           <el-button type="primary" icon="el-icon-search" size="mini" :loading="loading" @click="fetchData()">搜索
           </el-button>
           <el-button icon="el-icon-refresh" size="mini" @click="resetData">重置</el-button>
         </el-row>
       </el-form>
     </div>
+
+    <!-- 工具条 -->
+    <!--    <div class="tools-div">
+          <el-button type="success" icon="el-icon-plus" size="mini" @click="add">添 加</el-button>
+        </div>-->
 
     <!-- 表格 -->
     <el-table
@@ -58,6 +64,21 @@
       style="padding: 30px 0; text-align: center;"
       layout="total, prev, pager, next, jumper"
       @current-change="fetchData"/>
+
+    <el-dialog title="添加/修改" :visible.sync="dialogVisible" width="40%">
+      <el-form ref="dataForm" :model="sysRole" label-width="150px" size="small" style="padding-right: 40px;">
+        <el-form-item label="角色名称">
+          <el-input v-model="sysRole.roleName"/>
+        </el-form-item>
+        <el-form-item label="角色编码">
+          <el-input v-model="sysRole.roleCode"/>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false" size="small" icon="el-icon-refresh-right">取 消</el-button>
+        <el-button type="primary" icon="el-icon-check" @click="saveOrUpdate()" size="small">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -74,6 +95,8 @@ export default {
       limit: 10, // 每页显示记录数
       total: 0, // 总记录数
       searchObj: {}, // 条件变量
+      sysRole: {}, // 封装表单角色数据
+      dialogVisible: false, // 是否弹框
     }
   },
   created() { // 渲染之前执行
@@ -102,6 +125,52 @@ export default {
         this.fetchData(this.page)
         this.$message.success(response.message || '删除成功')
       })
+    },
+    // 添加
+    add() {
+      this.dialogVisible = true;
+    },
+    // 添加或修改角色
+    saveOrUpdate() {
+      // 根据 id 判断
+      if (!this.sysRole.id) {
+        this.save();
+      } else {
+        this.update()
+      }
+    },
+    save() {
+      api.saveRole(this.sysRole)
+        .then(response => {
+          // 提示
+          this.$message.success(response.message || '操作成功')
+          // 关闭弹窗
+          this.dialogVisible = false
+          // 刷新页面
+          this.fetchData()
+        })
+    },
+    update() {
+      api.updateById(this.sysRole)
+        .then(response => {
+          // 提示
+          this.$message.success(response.message || '操作成功')
+          // 关闭弹窗
+          this.dialogVisible = false
+          // 刷新页面
+          this.fetchData()
+        })
+    },
+    // 点击修改，弹出框，根据id查询数据显示
+    edit(id) {
+      // 弹出框
+      this.dialogVisible = true;
+      // 根据 id 查询
+      this.fetchDataById(id)
+    },
+    fetchDataById(id) {
+      api.getById(id)
+        .then(response => this.sysRole = response.data)
     }
   }
 }
