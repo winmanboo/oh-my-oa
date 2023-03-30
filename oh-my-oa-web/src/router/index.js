@@ -56,6 +56,26 @@ export const constantRoutes = [
   },
 
   {
+    path: '/system',
+    component: Layout,
+    meta: {
+      title: '系统管理',
+      icon: 'el-icon-s-tools'
+    },
+    alwaysShow: true,
+    children: [
+      {
+        path: 'sysRole',
+        component: () => import('@/views/system/sysRole/list'),
+        meta: {
+          title: '角色管理',
+          icon: 'el-icon-s-help'
+        },
+      }
+    ]
+  },
+
+  {
     path: '/example',
     component: Layout,
     redirect: '/example/table',
