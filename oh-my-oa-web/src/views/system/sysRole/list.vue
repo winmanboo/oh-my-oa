@@ -12,6 +12,7 @@
         </el-row>
         <el-row style="display:flex">
           <el-button type="success" icon="el-icon-plus" size="mini" @click="add">添 加</el-button>
+          <el-button class="btn-add" size="mini" @click="batchRemove()">批量删除</el-button>
           <el-button type="primary" icon="el-icon-search" size="mini" :loading="loading" @click="fetchData()">搜索
           </el-button>
           <el-button icon="el-icon-refresh" size="mini" @click="resetData">重置</el-button>
@@ -97,12 +98,39 @@ export default {
       searchObj: {}, // 条件变量
       sysRole: {}, // 封装表单角色数据
       dialogVisible: false, // 是否弹框
+      selections: [], // 多个复选框值
     }
   },
   created() { // 渲染之前执行
     this.fetchData();
   },
   methods: { // 操作方法
+    // 选择复选框，把复选框所在航
+    handleSelectionChange(selection) {
+      this.selections = selection
+    },
+    // 批量删除
+    batchRemove() {
+      // 判断
+      if (this.selections.length === 0) {
+        this.$message.warning('请选择要删除的记录！');
+        return
+      }
+      this.$confirm('此操作将永久删除该记录, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        let idList = []
+        this.selections.forEach(item => {
+          idList.push(item.id)
+        })
+        return api.batchRemove(idList)
+      }).then(response => {
+        this.$message.success(response.message)
+        this.fetchData()
+      })
+    },
     // 条件分页查询
     fetchData(current = 1) {
       this.page = current
