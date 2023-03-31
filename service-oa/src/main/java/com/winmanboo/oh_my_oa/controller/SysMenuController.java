@@ -3,6 +3,7 @@ package com.winmanboo.oh_my_oa.controller;
 import com.winmanboo.common.result.Result;
 import com.winmanboo.model.system.SysMenu;
 import com.winmanboo.oh_my_oa.service.SysMenuService;
+import com.winmanboo.vo.system.AssignMenuVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,20 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SysMenuController {
   private final SysMenuService sysMenuService;
+
+  @ApiOperation("查询所有菜单和角色分配的菜单")
+  @GetMapping("/toAssign/{roleId}")
+  public Result<List<SysMenu>> toAssign(@PathVariable Long roleId) {
+    List<SysMenu> list = sysMenuService.findMenuByRoleId(roleId);
+    return Result.ok(list);
+  }
+
+  @ApiOperation("为角色分配菜单")
+  @PostMapping("/doAssign")
+  public Result<Void> doAssign(@RequestBody AssignMenuVo assignMenuVo) {
+    sysMenuService.doAssign(assignMenuVo);
+    return Result.ok();
+  }
 
   @ApiOperation("菜单列表")
   @GetMapping("/findNodes")
@@ -49,6 +64,7 @@ public class SysMenuController {
   @ApiOperation(value = "删除菜单")
   @DeleteMapping("remove/{id}")
   public Result<Void> remove(@PathVariable Long id) {
+    // TODO: 2023/3/31 删除菜单与角色的关联关系
     sysMenuService.removeMenuById(id);
     return Result.ok();
   }
