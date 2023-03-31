@@ -50,6 +50,20 @@ export default {
       method: 'delete',
       data: idList
     })
-  }
-
+  },
+  // 获取角色信息
+  getRoles(adminId) {
+    return request({
+      url: `${api_name}/toAssign/${adminId}`,
+      method: 'get'
+    })
+  },
+  // 分配角色
+  assignRoles(assignRoleVo) {
+    return request({
+      url: `${api_name}/doAssign`,
+      method: 'post',
+      data: assignRoleVo
+    })
+  },
 }

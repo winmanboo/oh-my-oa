@@ -28,6 +28,13 @@ import org.springframework.web.bind.annotation.*;
 public class SysUserController {
   private final SysUserService service;
 
+  @ApiOperation("更新状态")
+  @GetMapping("/updateStatus/{id}/{status}")
+  public Result<Void> updateStatus(@PathVariable Long id, @PathVariable Integer status) {
+    service.updateStatus(id, status);
+    return Result.ok();
+  }
+
   @ApiOperation("用户条件分页查询")
   @GetMapping("/{page}/{limit}")
   public Result<IPage<SysUser>> index(@PathVariable("page") Long page, @PathVariable("limit") Long limit, SysUserQueryVo sysUserQueryVo) {
