@@ -81,6 +81,15 @@ export const constantRoutes = [
           icon: 'el-icon-s-help'
         },
       },
+      {
+        name: 'sysMenu',
+        path: 'sysMenu',
+        component: () => import('@/views/system/sysMenu/list'),
+        meta: {
+          title: '菜单管理',
+          icon: 'el-icon-s-unfold'
+        },
+      },
     ]
   },
 

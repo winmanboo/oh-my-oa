@@ -17,6 +17,12 @@ public class OhMyOaException extends RuntimeException {
     this.msg = msg;
   }
 
+  public OhMyOaException(String msg) {
+    super(msg);
+    this.code = ResultCodeEnum.FAIL.getCode();
+    this.msg = msg;
+  }
+
   public OhMyOaException(ResultCodeEnum resultCodeEnum) {
     super(resultCodeEnum.getMessage());
     this.code = resultCodeEnum.getCode();

@@ -1,6 +1,7 @@
 package com.winmanboo.oh_my_oa.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.winmanboo.common.exception.OhMyOaException;
 import com.winmanboo.model.system.SysMenu;
 import com.winmanboo.oh_my_oa.mapper.SysMenuMapper;
 import com.winmanboo.oh_my_oa.service.SysMenuService;
@@ -27,5 +28,15 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
 
     // 构建树形结构
     return MenuHelper.buildTree(sysMenuList);
+  }
+
+  @Override
+  public void removeMenuById(Long id) {
+    // 判断当前菜单是否有子菜单
+    boolean hasChildrenMenu = lambdaQuery().eq(SysMenu::getParentId, id).count() > 0;
+    if (hasChildrenMenu) {
+      throw new OhMyOaException("该菜单有子菜单不能直接删除");
+    }
+    this.removeById(id);
   }
 }
