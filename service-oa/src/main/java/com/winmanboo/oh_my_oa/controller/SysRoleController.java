@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.winmanboo.common.result.Result;
 import com.winmanboo.model.system.SysRole;
 import com.winmanboo.oh_my_oa.service.SysRoleService;
+import com.winmanboo.vo.system.AssignRoleVo;
 import com.winmanboo.vo.system.SysRoleQueryVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -15,6 +16,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @Api(tags = "角色管理接口")
 @RestController
@@ -22,6 +24,26 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SysRoleController {
   private final SysRoleService sysRoleService;
+
+  /**
+   * 查询所有角色 和 当前用户所属角色
+   */
+  @ApiOperation("获取角色")
+  @GetMapping("/toAssign/{userId}")
+  public Result<Map<String, Object>> toAssign(@PathVariable Long userId) {
+    Map<String, Object> map = sysRoleService.findRoleDataByUserId(userId);
+    return Result.ok(map);
+  }
+
+  /**
+   * 为用户分配角色
+   */
+  @ApiOperation("为用户分配角色")
+  @PostMapping("/doAssign")
+  public Result<Void> doAssign(@RequestBody AssignRoleVo assignRoleVo) {
+    sysRoleService.doAssign(assignRoleVo);
+    return Result.ok();
+  }
 
   /**
    * 查询所有角色
