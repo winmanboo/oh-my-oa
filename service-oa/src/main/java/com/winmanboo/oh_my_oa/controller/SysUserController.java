@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.winmanboo.common.result.Result;
+import com.winmanboo.common.utils.MD5;
 import com.winmanboo.model.system.SysUser;
 import com.winmanboo.oh_my_oa.service.SysUserService;
 import com.winmanboo.vo.system.SysUserQueryVo;
@@ -56,6 +57,8 @@ public class SysUserController {
   @ApiOperation(value = "保存用户")
   @PostMapping("save")
   public Result<Void> save(@RequestBody SysUser user) {
+    String encrypt = MD5.encrypt(user.getPassword());
+    user.setPassword(encrypt);
     service.save(user);
     return Result.ok();
   }
