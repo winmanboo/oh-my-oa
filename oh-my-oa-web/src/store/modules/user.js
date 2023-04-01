@@ -1,12 +1,16 @@
 import { login, logout, getInfo } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import { resetRouter } from '@/router'
+import menu from "element-ui/packages/menu";
 
 const getDefaultState = () => {
   return {
     token: getToken(),
     name: '',
-    avatar: ''
+    avatar: '',
+    // 新增
+    buttons: [],
+    menus: ''
   }
 }
 
@@ -24,6 +28,13 @@ const mutations = {
   },
   SET_AVATAR: (state, avatar) => {
     state.avatar = avatar
+  },
+  // 新增
+  SET_BUTTONS: (state, buttons) => {
+    state.buttons = buttons
+  },
+  SET_MENUS: (state, menus) => {
+    state.menus = menus
   }
 }
 
@@ -57,6 +68,9 @@ const actions = {
 
         commit('SET_NAME', name)
         commit('SET_AVATAR', avatar)
+        // 新增
+        commit('SET_BUTTONS', data.buttons)
+        commit('SET_MENUS', data.routers)
         resolve(data)
       }).catch(error => {
         reject(error)

@@ -11,7 +11,9 @@
           </el-col>
         </el-row>
         <el-row style="display:flex">
-          <el-button type="success" icon="el-icon-plus" size="mini" @click="add">添 加</el-button>
+          <el-button type="success" icon="el-icon-plus" size="mini" @click="add"
+                     :disabled="$hasBP('bnt.sysRole.add')  === false">添 加
+          </el-button>
           <el-button class="btn-add" size="mini" @click="batchRemove()">批量删除</el-button>
           <el-button type="primary" icon="el-icon-search" size="mini" :loading="loading" @click="fetchData()">搜索
           </el-button>
@@ -27,19 +29,19 @@
 
     <!-- 表格 -->
     <el-table
-        v-loading="listLoading"
-        :data="list"
-        stripe
-        border
-        style="width: 100%;margin-top: 10px;"
-        @selection-change="handleSelectionChange">
+      v-loading="listLoading"
+      :data="list"
+      stripe
+      border
+      style="width: 100%;margin-top: 10px;"
+      @selection-change="handleSelectionChange">
 
       <el-table-column type="selection"/>
 
       <el-table-column
-          label="序号"
-          width="70"
-          align="center">
+        label="序号"
+        width="70"
+        align="center">
         <template slot-scope="scope">
           {{ (page - 1) * limit + scope.$index + 1 }}
         </template>
@@ -61,12 +63,12 @@
 
     <!-- 分页组件 -->
     <el-pagination
-        :current-page="page"
-        :total="total"
-        :page-size="limit"
-        style="padding: 30px 0; text-align: center;"
-        layout="total, prev, pager, next, jumper"
-        @current-change="fetchData"/>
+      :current-page="page"
+      :total="total"
+      :page-size="limit"
+      style="padding: 30px 0; text-align: center;"
+      layout="total, prev, pager, next, jumper"
+      @current-change="fetchData"/>
 
     <el-dialog title="添加/修改" :visible.sync="dialogVisible" width="40%">
       <el-form ref="dataForm" :model="sysRole" label-width="150px" size="small" style="padding-right: 40px;">
@@ -141,10 +143,10 @@ export default {
     fetchData(current = 1) {
       this.page = current
       api.getPageList(this.page, this.limit, this.searchObj)
-          .then(response => {
-            this.list = response.data.records;
-            this.total = response.data.total
-          })
+        .then(response => {
+          this.list = response.data.records;
+          this.total = response.data.total
+        })
     },
     // 删除
     removeDataById(id) {
@@ -175,25 +177,25 @@ export default {
     },
     save() {
       api.saveRole(this.sysRole)
-          .then(response => {
-            // 提示
-            this.$message.success(response.message || '操作成功')
-            // 关闭弹窗
-            this.dialogVisible = false
-            // 刷新页面
-            this.fetchData()
-          })
+        .then(response => {
+          // 提示
+          this.$message.success(response.message || '操作成功')
+          // 关闭弹窗
+          this.dialogVisible = false
+          // 刷新页面
+          this.fetchData()
+        })
     },
     update() {
       api.updateById(this.sysRole)
-          .then(response => {
-            // 提示
-            this.$message.success(response.message || '操作成功')
-            // 关闭弹窗
-            this.dialogVisible = false
-            // 刷新页面
-            this.fetchData()
-          })
+        .then(response => {
+          // 提示
+          this.$message.success(response.message || '操作成功')
+          // 关闭弹窗
+          this.dialogVisible = false
+          // 刷新页面
+          this.fetchData()
+        })
     },
     // 点击修改，弹出框，根据id查询数据显示
     edit(id) {
@@ -204,7 +206,7 @@ export default {
     },
     fetchDataById(id) {
       api.getById(id)
-          .then(response => this.sysRole = response.data)
+        .then(response => this.sysRole = response.data)
     }
   }
 }

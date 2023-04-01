@@ -27,7 +27,7 @@ public class IndexController {
   private final SysMenuService sysMenuService;
 
   @PostMapping("/login")
-  public Result<String> login(@RequestBody LoginVo loginVo) {
+  public Result<Map<String, Object>> login(@RequestBody LoginVo loginVo) {
     String username = loginVo.getUsername();
     SysUser user = sysUserService.lambdaQuery().eq(SysUser::getUsername, username).one();
     if (user == null) {
@@ -43,13 +43,13 @@ public class IndexController {
     }
     String token = JwtHelper.createToken(user.getId(), user.getUsername());
 
-    return Result.ok(token);
+    return Result.ok(Map.of("token", token));
   }
 
   @GetMapping("/info")
   public Result<Map<String, Object>> info(HttpServletRequest request) {
     // 1、从请求头中获取用户信息（获取请求头 token 字符串）
-    String token = request.getHeader("header");
+    String token = request.getHeader("token");
 
     // 2、从 token 字符串获取用户 id 或者用户名称
     Long userId = JwtHelper.getUserId(token);
@@ -78,7 +78,7 @@ public class IndexController {
   }
 
   @PostMapping("/logout")
-  public Result<Void> logou() {
+  public Result<Void> logout() {
     return Result.ok();
   }
 }

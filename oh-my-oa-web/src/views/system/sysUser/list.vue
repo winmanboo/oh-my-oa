@@ -197,7 +197,6 @@ export default {
 
     // 加载banner列表数据
     fetchData(page = 1) {
-      debugger
       this.page = page
       console.log('翻页。。。' + this.page)
 
@@ -300,11 +299,11 @@ export default {
 
     getRoles() {
       roleApi.getRoles(this.sysUser.id).then(response => {
-        const {allRolesList, assginRoleList} = response.data
+        const {allRolesList, assignRoleList} = response.data
         this.allRoles = allRolesList
-        this.userRoleIds = assginRoleList.map(item => item.id)
-        this.checkAll = allRolesList.length === assginRoleList.length
-        this.isIndeterminate = assginRoleList.length > 0 && assginRoleList.length < allRolesList.length
+        this.userRoleIds = assignRoleList.map(item => item.id)
+        this.checkAll = allRolesList.length === assignRoleList.length
+        this.isIndeterminate = assignRoleList.length > 0 && assignRoleList.length < allRolesList.length
       })
     },
 
