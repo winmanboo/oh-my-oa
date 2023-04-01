@@ -9,9 +9,13 @@ import com.winmanboo.oh_my_oa.service.SysMenuService;
 import com.winmanboo.oh_my_oa.service.SysRoleMenuService;
 import com.winmanboo.oh_my_oa.utils.MenuHelper;
 import com.winmanboo.vo.system.AssignMenuVo;
+import com.winmanboo.vo.system.MetaVo;
+import com.winmanboo.vo.system.RouterVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -81,5 +85,91 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
     }).toList();
 
     sysRoleMenuService.saveBatch(sysRoleMenuList);
+  }
+
+  @Override
+  public List<RouterVo> findUserMenuListByUserId(Long userId) {
+    List<SysMenu> sysMenuList = null;
+    // 如果用户是管理员，查询所有的菜单列表 userId = 1
+    if (userId == 1) { // 是管理员
+      sysMenuList = lambdaQuery().eq(SysMenu::getStatus, 1).orderByAsc(SysMenu::getSortValue).list();
+    } else {
+      // 如果不是管理员，根据 userId 查询可以操作的菜单列表
+      // 多表关联查询：用户角色关系表、角色菜单关系表、菜单表
+      sysMenuList = baseMapper.findMenuListByUserId(userId);
+    }
+    // 把查询出来的数据列表构建成 vue 框架要求的路由结构
+    List<SysMenu> sysMenuTreeList = MenuHelper.buildTree(sysMenuList); // 先构建出树形结构
+    return this.buildRouter(sysMenuTreeList);
+  }
+
+  /**
+   * 根据菜单构建路由
+   *
+   * @param menus 树形菜单
+   * @return 返回前端所需的路由结构
+   */
+  private List<RouterVo> buildRouter(List<SysMenu> menus) {
+    return menus.stream().map(menu -> {
+      RouterVo router = new RouterVo();
+      router.setHidden(false);
+      router.setAlwaysShow(false);
+      router.setPath(getRouterPath(menu));
+      router.setComponent(menu.getComponent());
+      router.setMeta(new MetaVo(menu.getName(), menu.getIcon()));
+
+      List<SysMenu> children = menu.getChildren();
+      if (menu.getType() == 1) { // 菜单
+        // 加载隐藏路由
+        List<SysMenu> hiddenMenuList = children.stream().filter(item -> StringUtils.hasText(item.getComponent())).toList();
+        List<RouterVo> hiddenRouters = hiddenMenuList.stream().map(hiddenMenu -> {
+          RouterVo hiddenRouter = new RouterVo();
+          hiddenRouter.setHidden(true);
+          hiddenRouter.setAlwaysShow(false);
+          hiddenRouter.setPath(getRouterPath(hiddenMenu));
+          hiddenRouter.setComponent(hiddenMenu.getComponent());
+          hiddenRouter.setMeta(new MetaVo(hiddenMenu.getName(), hiddenMenu.getIcon()));
+          return hiddenRouter;
+        }).toList();
+        router.setChildren(hiddenRouters);
+      } else {
+        if (!CollectionUtils.isEmpty(children)) {
+          if (!children.isEmpty()) {
+            router.setAlwaysShow(true);
+          }
+          router.setChildren(buildRouter(children));
+        }
+      }
+      return router;
+    }).toList();
+  }
+
+  /**
+   * 获取路由地址
+   *
+   * @param menu 菜单
+   * @return 路由地址，顶层地址前加'/'，非顶层不加'/'
+   */
+  private String getRouterPath(SysMenu menu) {
+    String routerPath = "/" + menu.getPath();
+    if (menu.getParentId() != 0) {
+      routerPath = menu.getPath();
+    }
+    return routerPath;
+  }
+
+  @Override
+  public List<String> findUserPermsByUserId(Long userId) {
+    List<SysMenu> sysMenuList = null;
+    // 判断是否是管理员，如果是管理员，查询所有的按钮列表
+    if (userId == 1) {
+      sysMenuList = lambdaQuery().eq(SysMenu::getStatus, 1).list();
+    } else {
+      // 如果不是管理员，根据 userId 查询可以操作的按钮列表
+      sysMenuList = baseMapper.findMenuListByUserId(userId);
+    }
+
+    // 从查询出来的数据里面，获取可以操作按钮值的 list 集合，并返回
+    return sysMenuList.stream().filter(menu -> menu.getType() == 2).map(SysMenu::getPerms).toList();
   }
 }
