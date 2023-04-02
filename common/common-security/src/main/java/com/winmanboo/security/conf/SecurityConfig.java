@@ -1,12 +1,16 @@
 package com.winmanboo.security.conf;
 
+import com.winmanboo.security.exception.AccessDeniedHandlerImpl;
+import com.winmanboo.security.exception.AuthenticationEntryPointImpl;
 import com.winmanboo.security.filter.TokenAuthenticationFilter;
 import com.winmanboo.security.filter.TokenLoginFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
@@ -20,8 +24,11 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
   private final UserDetailsService userDetailsService;
+
+  private final RedisTemplate<String, Object> redisTemplate;
 
   @Bean
   public PasswordEncoder passwordEncoder() {
@@ -51,8 +58,12 @@ public class SecurityConfig {
         .and()
         // TokenAuthenticationFilter 方道 UsernamePasswordAuthenticationFilter 之前，
         // 这样做是为了登陆的时候去查询数据库外，其他时候都用 token 进行认证
-        .addFilterBefore(new TokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
-        .addFilter(new TokenLoginFilter(authenticationManager))
+        .addFilterBefore(new TokenAuthenticationFilter(redisTemplate), UsernamePasswordAuthenticationFilter.class)
+        .addFilter(new TokenLoginFilter(authenticationManager, redisTemplate))
+        .exceptionHandling()
+        .authenticationEntryPoint(new AuthenticationEntryPointImpl()) // 认证异常处理类
+        .accessDeniedHandler(new AccessDeniedHandlerImpl()) // 授权异常处理类
+        .and()
         .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         .and()
         .build();

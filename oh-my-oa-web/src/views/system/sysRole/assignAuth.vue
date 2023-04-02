@@ -4,13 +4,13 @@
       授权角色：{{ $route.query.roleName }}
     </div>
     <el-tree
-      style="margin: 20px 0"
-      ref="tree"
-      :data="sysMenuList"
-      node-key="id"
-      show-checkbox
-      default-expand-all
-      :props="defaultProps"
+        style="margin: 20px 0"
+        ref="tree"
+        :data="sysMenuList"
+        node-key="id"
+        show-checkbox
+        default-expand-all
+        :props="defaultProps"
     />
     <div style="padding: 20px 20px;">
       <el-button :loading="loading" type="primary" icon="el-icon-check" size="mini" @click="save">保存</el-button>

@@ -1,5 +1,6 @@
 package com.winmanboo.security.filter;
 
+import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.winmanboo.common.jwt.JwtHelper;
 import com.winmanboo.common.result.Result;
@@ -7,6 +8,7 @@ import com.winmanboo.common.result.ResultCodeEnum;
 import com.winmanboo.common.utils.ResponseUtils;
 import com.winmanboo.security.domain.SecurityUser;
 import com.winmanboo.vo.system.LoginVo;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -23,8 +25,11 @@ import java.io.IOException;
 import java.util.Map;
 
 public class TokenLoginFilter extends UsernamePasswordAuthenticationFilter {
+  private final RedisTemplate<String, Object> redisTemplate;
+
   // 构造方法
-  public TokenLoginFilter(AuthenticationManager authenticationManager) {
+  public TokenLoginFilter(AuthenticationManager authenticationManager, RedisTemplate<String, Object> redisTemplate) {
+    this.redisTemplate = redisTemplate;
     this.setAuthenticationManager(authenticationManager);
     this.setPostOnly(false);
     // 指定登陆接口及提交方式，可以指定任意路径
@@ -55,6 +60,9 @@ public class TokenLoginFilter extends UsernamePasswordAuthenticationFilter {
     SecurityUser principal = (SecurityUser) authResult.getPrincipal();
     // 生成 token 字符串
     String token = JwtHelper.createToken(principal.getSysUser().getId(), principal.getSysUser().getUsername());
+
+    // 获取当前用户权限数据，存到 redis 中，key-username value-权限数据
+    redisTemplate.opsForValue().set(principal.getUsername(), JSON.toJSONString(principal.getAuthorities()));
     // 返回
     ResponseUtils.out(response, Result.ok(Map.of("token", token)));
   }

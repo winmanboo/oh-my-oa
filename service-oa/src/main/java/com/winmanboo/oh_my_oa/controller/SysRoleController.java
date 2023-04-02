@@ -12,6 +12,7 @@ import com.winmanboo.vo.system.SysRoleQueryVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -61,6 +62,7 @@ public class SysRoleController {
    * @param sysRoleQueryVo
    * @return
    */
+  @PreAuthorize("hasAuthority('bnt.sysRole.list')")
   @ApiOperation("条件分页查询")
   @GetMapping("/{page}/{limit}")
   public Result<IPage<SysRole>> pageQueryRole(@PathVariable("page") Long page,
@@ -77,30 +79,35 @@ public class SysRoleController {
     return Result.ok(pageModel);
   }
 
+  @PreAuthorize("hasAuthority('bnt.sysRole.add')")
   @ApiOperation("添加角色")
   @PostMapping("/save")
   public Result<Void> save(@RequestBody SysRole role) {
     return sysRoleService.save(role) ? Result.ok() : Result.fail();
   }
 
+  @PreAuthorize("hasAuthority('bnt.sysRole.list')")
   @ApiOperation("根据id查询")
   @GetMapping("/get/{id}")
   public Result<SysRole> get(@PathVariable("id") Long id) {
     return Result.ok(sysRoleService.getById(id));
   }
 
+  @PreAuthorize("hasAuthority('bnt.sysRole.update')")
   @ApiOperation("修改角色")
   @PutMapping("/update")
   public Result<Void> update(@RequestBody SysRole sysRole) {
     return sysRoleService.updateById(sysRole) ? Result.ok() : Result.fail();
   }
 
+  @PreAuthorize("hasAuthority('bnt.sysRole.remove')")
   @ApiOperation("根据id删除")
   @DeleteMapping("/remove/{id}")
   public Result<Void> remove(@PathVariable("id") Long id) {
     return sysRoleService.removeById(id) ? Result.ok() : Result.fail();
   }
 
+  @PreAuthorize("hasAuthority('bnt.sysRole.remove')")
   // 数组 [1,2,3]
   @ApiOperation("批量删除")
   @DeleteMapping("/batchRemove")
