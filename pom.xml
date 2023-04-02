@@ -29,6 +29,7 @@
         <knife4j.version>3.0.3</knife4j.version>
         <jjwt.version>0.11.5</jjwt.version>
         <fastjson.version>2.0.26</fastjson.version>
+        <activiti.version>7.1.0.M6</activiti.version>
     </properties>
 
     <dependencyManagement>
@@ -79,6 +80,12 @@
                 <groupId>com.alibaba</groupId>
                 <artifactId>fastjson</artifactId>
                 <version>${fastjson.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.activiti</groupId>
+                <artifactId>activiti-spring-boot-starter</artifactId>
+                <version>${activiti.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
