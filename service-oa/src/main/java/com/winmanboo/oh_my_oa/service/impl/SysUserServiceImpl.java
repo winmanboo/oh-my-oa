@@ -26,4 +26,9 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
     lambdaUpdate().eq(SysUser::getId, userId).set(SysUser::getStatus, status).update();
   }
+
+  @Override
+  public SysUser getUserByUsername(String username) {
+    return lambdaQuery().eq(SysUser::getUsername, username).one();
+  }
 }
