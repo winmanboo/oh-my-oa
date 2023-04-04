@@ -20,6 +20,12 @@ import hasBtnPermission from '@/utils/btn-permission'
 
 Vue.prototype.$hasBP = hasBtnPermission
 
+import formCreate from '@form-create/element-ui'
+import FcDesigner from '@form-create/designer'
+
+Vue.use(formCreate)
+Vue.use(FcDesigner)
+
 /**
  * If you don't want to use mock-server
  * you want to use MockJs for mock api
@@ -29,12 +35,12 @@ Vue.prototype.$hasBP = hasBtnPermission
  * please remove it before going online ! ! !
  */
 if (process.env.NODE_ENV === 'production') {
-  const { mockXHR } = require('../mock')
+  const {mockXHR} = require('../mock')
   mockXHR()
 }
 
 // set ElementUI lang to EN
-Vue.use(ElementUI, { locale })
+Vue.use(ElementUI, {locale})
 // 如果想要中文版 element-ui，按如下方式声明
 // Vue.use(ElementUI)
 
