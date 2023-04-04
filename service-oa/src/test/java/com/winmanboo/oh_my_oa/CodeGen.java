@@ -25,7 +25,7 @@ public class CodeGen {
               .pathInfo(Collections.singletonMap(OutputFile.xml, "/Users/wangzhiming/StudyProjects/oh-my-oa/service-oa/src/main/resources/mapper")); // 设置mapperXml生成路径
         })
         .strategyConfig(builder -> {
-          builder.addInclude("oa_process_type", "oa_process_template") // 设置需要生成的表名
+          builder.addInclude("oa_process") // 设置需要生成的表名
               .entityBuilder() // 实体类配置
               .naming(NamingStrategy.underline_to_camel) // 数据库表映射到实体的命名策略
               .columnNaming(NamingStrategy.underline_to_camel) // 数据库表映射到实体的命名策略
