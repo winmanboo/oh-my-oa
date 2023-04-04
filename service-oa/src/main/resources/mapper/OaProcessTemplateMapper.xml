@@ -2,4 +2,9 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.winmanboo.oh_my_oa.process.mapper.OaProcessTemplateMapper">
 
+  <select id="selectPageProcessTemplate" resultType="com.winmanboo.model.process.ProcessTemplate">
+    select o.*, opt.name as processTypeName
+    from oa_process_type opt
+           inner join oa_process_template o on opt.id = o.process_type_id
+  </select>
 </mapper>

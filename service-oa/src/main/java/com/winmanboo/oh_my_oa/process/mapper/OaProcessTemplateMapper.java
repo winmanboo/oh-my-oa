@@ -1,6 +1,8 @@
 package com.winmanboo.oh_my_oa.process.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.winmanboo.model.process.ProcessTemplate;
 
 /**
@@ -13,4 +15,5 @@ import com.winmanboo.model.process.ProcessTemplate;
  */
 public interface OaProcessTemplateMapper extends BaseMapper<ProcessTemplate> {
 
+  IPage<ProcessTemplate> selectPageProcessTemplate(Page<ProcessTemplate> pageParam);
 }
