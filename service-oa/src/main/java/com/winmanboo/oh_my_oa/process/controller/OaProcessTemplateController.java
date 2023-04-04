@@ -105,4 +105,13 @@ public class OaProcessTemplateController {
         "processDefinitionKey", fileName.substring(0, fileName.lastIndexOf("."))
     ));
   }
+
+  // 部署流程定义（发布）
+  @ApiOperation("发布")
+  @PostMapping("/publish/{id}")
+  public Result<Void> publish(@PathVariable Long id) {
+    // 修改模版发布状态为 1 表示已发布，oa_process_template -> status
+    processTemplateService.publish(id);
+    return Result.ok();
+  }
 }

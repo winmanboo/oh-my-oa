@@ -48,4 +48,11 @@ public class OaProcessTemplateServiceImpl extends ServiceImpl<OaProcessTemplateM
 
     return baseMapper.selectPageProcessTemplate(pageParam);
   }
+
+  @Override
+  public void publish(Long id) {
+    lambdaUpdate().eq(ProcessTemplate::getId, id).set(ProcessTemplate::getStatus, 1).update();
+
+    // TODO: 2023/4/4 后续完善->流程定义部署
+  }
 }

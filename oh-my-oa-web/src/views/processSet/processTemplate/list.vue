@@ -43,6 +43,9 @@
           <el-button type="text" size="mini" @click="removeDataById(scope.row.id)"
                      :disabled="$hasBP('bnt.processTemplate.remove')  === false">删除
           </el-button>
+          <el-button v-if="scope.row.status === 0" type="text" size="mini" @click="publish(scope.row.id)"
+                     :disabled="$hasBP('bnt.processTemplate.publish')  === false">发布
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -157,6 +160,12 @@ export default {
       this.option = JSON.parse(row.formOptions)
       this.processTemplate = row
       this.formDialogVisible = true
+    },
+    publish(id) {
+      api.publish(id).then(response => {
+        this.$message.success('发布成功')
+        this.fetchData(this.page)
+      })
     }
   }
 }

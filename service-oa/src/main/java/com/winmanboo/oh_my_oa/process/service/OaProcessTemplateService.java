@@ -16,4 +16,6 @@ import com.winmanboo.model.process.ProcessTemplate;
 public interface OaProcessTemplateService extends IService<ProcessTemplate> {
 
   IPage<ProcessTemplate> selectPageProcessTemplate(Page<ProcessTemplate> pageParam);
+
+  void publish(Long id);
 }
