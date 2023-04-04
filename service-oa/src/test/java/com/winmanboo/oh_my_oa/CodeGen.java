@@ -17,8 +17,8 @@ public class CodeGen {
               .outputDir("/Users/wangzhiming/StudyProjects/oh-my-oa/service-oa/src/main/java"); // 指定输出目录
         })
         .packageConfig(builder -> {
-          builder.parent("com.winmanboo") // 设置父包名
-              .moduleName("oh_my_oa") // 设置父包模块名
+          builder.parent("com.winmanboo.oh_my_oa") // 设置父包名
+              .moduleName("process") // 设置父包模块名
               .controller("controller")
               .service("service")
               .mapper("mapper")
