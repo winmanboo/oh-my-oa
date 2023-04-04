@@ -1,13 +1,13 @@
-package com.winmanboo.oh_my_oa.service.impl;
+package com.winmanboo.oh_my_oa.auth.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.winmanboo.common.exception.OhMyOaException;
 import com.winmanboo.model.system.SysMenu;
 import com.winmanboo.model.system.SysRoleMenu;
-import com.winmanboo.oh_my_oa.mapper.SysMenuMapper;
-import com.winmanboo.oh_my_oa.service.SysMenuService;
-import com.winmanboo.oh_my_oa.service.SysRoleMenuService;
-import com.winmanboo.oh_my_oa.utils.MenuHelper;
+import com.winmanboo.oh_my_oa.auth.mapper.SysMenuMapper;
+import com.winmanboo.oh_my_oa.auth.service.SysMenuService;
+import com.winmanboo.oh_my_oa.auth.service.SysRoleMenuService;
+import com.winmanboo.oh_my_oa.auth.utils.MenuHelper;
 import com.winmanboo.vo.system.AssignMenuVo;
 import com.winmanboo.vo.system.MetaVo;
 import com.winmanboo.vo.system.RouterVo;

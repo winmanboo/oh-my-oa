@@ -1,10 +1,10 @@
-package com.winmanboo.oh_my_oa.service.impl;
+package com.winmanboo.oh_my_oa.auth.service.impl;
 
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.winmanboo.model.system.SysUser;
-import com.winmanboo.oh_my_oa.mapper.SysUserMapper;
-import com.winmanboo.oh_my_oa.service.SysUserService;
+import com.winmanboo.oh_my_oa.auth.mapper.SysUserMapper;
+import com.winmanboo.oh_my_oa.auth.service.SysUserService;
 import org.springframework.stereotype.Service;
 
 /**

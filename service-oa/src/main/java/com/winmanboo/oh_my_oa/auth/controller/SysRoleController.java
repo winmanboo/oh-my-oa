@@ -1,4 +1,4 @@
-package com.winmanboo.oh_my_oa.controller;
+package com.winmanboo.oh_my_oa.auth.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.winmanboo.common.result.Result;
 import com.winmanboo.model.system.SysRole;
-import com.winmanboo.oh_my_oa.service.SysRoleService;
+import com.winmanboo.oh_my_oa.auth.service.SysRoleService;
 import com.winmanboo.vo.system.AssignRoleVo;
 import com.winmanboo.vo.system.SysRoleQueryVo;
 import io.swagger.annotations.Api;

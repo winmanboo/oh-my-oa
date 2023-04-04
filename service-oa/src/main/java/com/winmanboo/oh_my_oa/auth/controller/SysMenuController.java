@@ -1,8 +1,8 @@
-package com.winmanboo.oh_my_oa.controller;
+package com.winmanboo.oh_my_oa.auth.controller;
 
 import com.winmanboo.common.result.Result;
 import com.winmanboo.model.system.SysMenu;
-import com.winmanboo.oh_my_oa.service.SysMenuService;
+import com.winmanboo.oh_my_oa.auth.service.SysMenuService;
 import com.winmanboo.vo.system.AssignMenuVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

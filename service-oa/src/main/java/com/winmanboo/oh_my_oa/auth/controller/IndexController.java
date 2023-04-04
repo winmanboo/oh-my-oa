@@ -1,12 +1,12 @@
-package com.winmanboo.oh_my_oa.controller;
+package com.winmanboo.oh_my_oa.auth.controller;
 
 import com.winmanboo.common.exception.OhMyOaException;
 import com.winmanboo.common.jwt.JwtHelper;
 import com.winmanboo.common.result.Result;
 import com.winmanboo.common.utils.MD5;
 import com.winmanboo.model.system.SysUser;
-import com.winmanboo.oh_my_oa.service.SysMenuService;
-import com.winmanboo.oh_my_oa.service.SysUserService;
+import com.winmanboo.oh_my_oa.auth.service.SysMenuService;
+import com.winmanboo.oh_my_oa.auth.service.SysUserService;
 import com.winmanboo.vo.system.LoginVo;
 import com.winmanboo.vo.system.RouterVo;
 import io.swagger.annotations.Api;

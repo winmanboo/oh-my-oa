@@ -1,4 +1,4 @@
-package com.winmanboo.oh_my_oa.utils;
+package com.winmanboo.oh_my_oa.auth.utils;
 
 import com.winmanboo.model.system.SysMenu;
 import lombok.experimental.UtilityClass;

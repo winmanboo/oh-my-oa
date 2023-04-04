@@ -1,9 +1,9 @@
-package com.winmanboo.oh_my_oa.service.impl;
+package com.winmanboo.oh_my_oa.auth.service.impl;
 
 import com.winmanboo.common.exception.OhMyOaException;
 import com.winmanboo.model.system.SysUser;
-import com.winmanboo.oh_my_oa.service.SysMenuService;
-import com.winmanboo.oh_my_oa.service.SysUserService;
+import com.winmanboo.oh_my_oa.auth.service.SysMenuService;
+import com.winmanboo.oh_my_oa.auth.service.SysUserService;
 import com.winmanboo.security.domain.SecurityUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

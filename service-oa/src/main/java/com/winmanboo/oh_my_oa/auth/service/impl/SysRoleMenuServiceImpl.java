@@ -1,9 +1,9 @@
-package com.winmanboo.oh_my_oa.service.impl;
+package com.winmanboo.oh_my_oa.auth.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.winmanboo.model.system.SysRoleMenu;
-import com.winmanboo.oh_my_oa.mapper.SysRoleMenuMapper;
-import com.winmanboo.oh_my_oa.service.SysRoleMenuService;
+import com.winmanboo.oh_my_oa.auth.mapper.SysRoleMenuMapper;
+import com.winmanboo.oh_my_oa.auth.service.SysRoleMenuService;
 import org.springframework.stereotype.Service;
 
 /**

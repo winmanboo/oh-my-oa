@@ -1,4 +1,4 @@
-package com.winmanboo.oh_my_oa.service;
+package com.winmanboo.oh_my_oa.auth.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.winmanboo.model.system.SysRoleMenu;
