@@ -9,6 +9,8 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * <p>
  * 审批类型 前端控制器
@@ -22,6 +24,12 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/admin/process/processType")
 public class OaProcessTypeController {
   private final OaProcessTypeService processTypeService;
+
+  @ApiOperation("查询所有审批分类")
+  @GetMapping("/findAll")
+  public Result<List<ProcessType>> findAll() {
+    return Result.ok(processTypeService.list());
+  }
 
   @ApiOperation("获取分页列表")
   @GetMapping("/{page}/{limit}")
