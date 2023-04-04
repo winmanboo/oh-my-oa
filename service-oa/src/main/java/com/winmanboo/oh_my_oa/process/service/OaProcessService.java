@@ -18,4 +18,9 @@ import com.winmanboo.vo.process.ProcessVo;
 public interface OaProcessService extends IService<Process> {
 
   IPage<ProcessVo> selectPage(Page<ProcessVo> pageParam, ProcessQueryVo processQueryVo);
+
+  /**
+   * 部署流程定义
+   */
+  void deployByZip(String deployPath);
 }

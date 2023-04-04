@@ -5,10 +5,12 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.winmanboo.model.process.ProcessTemplate;
 import com.winmanboo.oh_my_oa.process.mapper.OaProcessTemplateMapper;
+import com.winmanboo.oh_my_oa.process.service.OaProcessService;
 import com.winmanboo.oh_my_oa.process.service.OaProcessTemplateService;
 import com.winmanboo.oh_my_oa.process.service.OaProcessTypeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 /**
  * <p>
@@ -22,6 +24,8 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class OaProcessTemplateServiceImpl extends ServiceImpl<OaProcessTemplateMapper, ProcessTemplate> implements OaProcessTemplateService {
   private final OaProcessTypeService processTypeService;
+
+  private final OaProcessService processService;
 
   @Override
   public IPage<ProcessTemplate> selectPageProcessTemplate(Page<ProcessTemplate> pageParam) {
@@ -51,8 +55,12 @@ public class OaProcessTemplateServiceImpl extends ServiceImpl<OaProcessTemplateM
 
   @Override
   public void publish(Long id) {
-    lambdaUpdate().eq(ProcessTemplate::getId, id).set(ProcessTemplate::getStatus, 1).update();
+    ProcessTemplate processTemplate = this.getById(id);
+    processTemplate.setStatus(1);
+    this.updateById(processTemplate);
 
-    // TODO: 2023/4/4 后续完善->流程定义部署
+    if (StringUtils.hasText(processTemplate.getProcessDefinitionPath())) {
+      processService.deployByZip(processTemplate.getProcessDefinitionPath());
+    }
   }
 }
