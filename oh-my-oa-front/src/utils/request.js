@@ -2,17 +2,18 @@ import axios from "axios";
 
 // 创建axios实例
 const service = axios.create({
-  baseURL: "htto://localhost:8800", // api 的 base_url
+  baseURL: "http://localhost:8800", // api 的 base_url
   timeout: 30000 // 请求超时时间
 });
 
 // http request 拦截器
 service.interceptors.request.use(config => {
-    let token = window.localStorage.getItem("token") || "";
+    config.headers["token"] = 'eyJhbGciOiJIUzI1NiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAA_6tWKi5NUrJScgwN8dANDXYNUtJRSq0oULIyNLMwsDA3NzU11lEqLU4t8kwBikGYeYm5qUAtiSm5mXlKtQChsGK1QgAAAA.lO4maXrFZQIjrN9tPEKybjVQ1_wBMwK7xFUk3a4u8rk';
+    /*let token = window.localStorage.getItem("token") || "";
     if (token !== "") {
-      // config.headers["token"] = token;
-      config.headers["token"] = 'eyJhbGciOiJIUzI1NiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAA_6tWKi5NUrJScgwN8dANDXYNUtJRSq0oULIyNLMwsDA3M7Uw1FEqLU4t8kwBikGYeYm5qUAtiSm5mXlKtQCa-OTDQgAAAA.ZxwsMAsbdSueSIed8_5TSL6nuwJzQdUIeBy2o1OfxXY';
-    }
+      config.headers["token"] = token;
+
+    }*/
     return config;
   },
   err => {
