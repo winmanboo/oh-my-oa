@@ -7,7 +7,6 @@ import com.winmanboo.model.process.ProcessTemplate;
 import com.winmanboo.oh_my_oa.process.mapper.OaProcessTemplateMapper;
 import com.winmanboo.oh_my_oa.process.service.OaProcessService;
 import com.winmanboo.oh_my_oa.process.service.OaProcessTemplateService;
-import com.winmanboo.oh_my_oa.process.service.OaProcessTypeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -25,8 +24,6 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class OaProcessTemplateServiceImpl extends ServiceImpl<OaProcessTemplateMapper, ProcessTemplate> implements OaProcessTemplateService {
-  private final OaProcessTypeService processTypeService;
-
   private final OaProcessService processService;
 
   @Override
