@@ -12,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.util.List;
+
 /**
  * <p>
  * 审批模板 服务实现类
@@ -59,8 +61,14 @@ public class OaProcessTemplateServiceImpl extends ServiceImpl<OaProcessTemplateM
     processTemplate.setStatus(1);
     this.updateById(processTemplate);
 
+    // 流程定义部署
     if (StringUtils.hasText(processTemplate.getProcessDefinitionPath())) {
       processService.deployByZip(processTemplate.getProcessDefinitionPath());
     }
+  }
+
+  @Override
+  public List<ProcessTemplate> getByProcessTypeId(Long id) {
+    return lambdaQuery().eq(ProcessTemplate::getProcessTypeId, id).list();
   }
 }
