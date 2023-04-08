@@ -5,7 +5,10 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.winmanboo.model.system.SysUser;
 import com.winmanboo.oh_my_oa.auth.mapper.SysUserMapper;
 import com.winmanboo.oh_my_oa.auth.service.SysUserService;
+import com.winmanboo.security.helper.LoginUserInfoHelper;
 import org.springframework.stereotype.Service;
+
+import java.util.Map;
 
 /**
  * <p>
@@ -30,5 +33,14 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
   @Override
   public SysUser getUserByUsername(String username) {
     return lambdaQuery().eq(SysUser::getUsername, username).one();
+  }
+
+  @Override
+  public Map<String, Object> getCurrentUser() {
+    SysUser sysUser = this.getById(LoginUserInfoHelper.getUserId());
+    return Map.of(
+        "name", sysUser.getName(),
+        "phone", sysUser.getPhone()
+    );
   }
 }

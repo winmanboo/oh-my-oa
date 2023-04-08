@@ -13,7 +13,7 @@ export default {
 
   getCurrentUser() {
     return request({
-      url: `/admin/system/sysUser/getCurrentUser/`,
+      url: `/admin/system/sysUser/getCurrentUser`,
       method: 'get'
     })
   },
