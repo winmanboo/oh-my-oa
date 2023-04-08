@@ -6,6 +6,7 @@ import com.winmanboo.oh_my_oa.wechat.service.MenuService;
 import com.winmanboo.vo.wechat.MenuVo;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,6 +24,14 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MenuController {
   private final MenuService menuService;
+
+  // @PreAuthorize("hasAuthority('bnt.menu.removeMenu')")
+  @ApiOperation(value = "删除菜单")
+  @DeleteMapping("removeMenu")
+  public Result<Void> removeMenu() {
+    menuService.removeMenu();
+    return Result.ok();
+  }
 
   @ApiOperation("同步菜单")
   @GetMapping("/syncMenu")

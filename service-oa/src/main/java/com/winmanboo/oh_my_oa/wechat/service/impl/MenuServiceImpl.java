@@ -10,6 +10,7 @@ import com.winmanboo.oh_my_oa.wechat.service.MenuService;
 import com.winmanboo.vo.wechat.MenuVo;
 import io.jsonwebtoken.lang.Collections;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpService;
 import org.springframework.beans.BeanUtils;
@@ -97,5 +98,11 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
     } catch (WxErrorException e) {
       throw new OhMyOaException("推送失败");
     }
+  }
+
+  @SneakyThrows
+  @Override
+  public void removeMenu() {
+    wxMpService.getMenuService().menuDelete();
   }
 }
