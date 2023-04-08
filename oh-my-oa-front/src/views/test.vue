@@ -33,7 +33,7 @@ export default {
 
     zhangsan() {
       window.localStorage.setItem('token', '');
-      let token = 'eyJhbGciOiJIUzI1NiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAA_6tWKi5NUrJScgwN8dANDXYNUtJRSq0oULIyNLMwNDAyNLA00VEqLU4t8kxRsjKHMPMSc1OBWqoyEvPSixPzlGoBx7VDi0UAAAA.kxsa_Z2_YhJkKuKAyzzMIHmMz6GJFDLjcaf_t-4al6M'
+      let token = 'eyJhbGciOiJIUzI1NiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAA_6tWKi5NUrJScgwN8dANDXYNUtJRSq0oULIyNLMwNDAyMTA11lEqLU4t8kxRsjKHMPMSc1OBWqoyEvPSixPzlGoBbDHCFkUAAAA.oHREmdJnYHZlDpWxUvYP5r5hKCV49fYFF6hIstPmeBM'
       window.localStorage.setItem('token', token);
       this.token = window.localStorage.getItem('token')
     },

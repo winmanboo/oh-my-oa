@@ -8,6 +8,8 @@ import com.winmanboo.vo.process.ProcessFormVo;
 import com.winmanboo.vo.process.ProcessQueryVo;
 import com.winmanboo.vo.process.ProcessVo;
 
+import java.util.Map;
+
 /**
  * <p>
  * 审批类型 服务类
@@ -31,4 +33,6 @@ public interface OaProcessService extends IService<Process> {
    * 查询代办任务列表
    */
   IPage<ProcessVo> findPending(Page<Process> pageParam);
+
+  Map<String, Object> show(Long processId);
 }

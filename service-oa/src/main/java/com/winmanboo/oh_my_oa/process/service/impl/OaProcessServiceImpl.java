@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.winmanboo.common.exception.OhMyOaException;
 import com.winmanboo.model.process.Process;
+import com.winmanboo.model.process.ProcessRecord;
 import com.winmanboo.model.process.ProcessTemplate;
 import com.winmanboo.model.system.SysUser;
 import com.winmanboo.oh_my_oa.auth.service.SysUserService;
@@ -167,6 +168,33 @@ public class OaProcessServiceImpl extends ServiceImpl<OaProcessMapper, Process> 
     IPage<ProcessVo> page = new Page<>(pageParam.getCurrent(), pageParam.getSize(), totalCount);
     page.setRecords(processVoList);
     return page;
+  }
+
+  @Override
+  public Map<String, Object> show(Long processId) {
+    // 根据流程 id 获取流程信息
+    Process process = this.getById(processId);
+
+    // 根据流程 id 获取流程记录信息
+    List<ProcessRecord> processRecordList = processRecordService.lambdaQuery()
+        .eq(ProcessRecord::getProcessId, processId)
+        .list();
+
+    // 根据模版 id 查询模版信息
+    ProcessTemplate processTemplate = processTemplateService.getById(process.getProcessTemplateId());
+
+    // 判断当前用户是否可以审批（可以看到信息的人不一定能审批，以及不能重复审批）
+    List<Task> taskList = getCurrentTaskList(process.getProcessInstanceId());
+    // 判断任务审批人是否是当前用户
+    boolean isApprove = taskList.stream().allMatch(task -> task.getAssignee().equals(LoginUserInfoHelper.getUsername()));
+
+    // 查询数据分装到 map 集合返回
+    return Map.of(
+        "process", process,
+        "processRecordList", processRecordList,
+        "processTemplate", processTemplate,
+        "isApprove", isApprove
+    );
   }
 
   /**

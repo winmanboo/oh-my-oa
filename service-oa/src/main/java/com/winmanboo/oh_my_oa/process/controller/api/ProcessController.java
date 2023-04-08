@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @Api("审批流管理")
 @RestController
@@ -58,5 +59,12 @@ public class ProcessController {
   public Result<List<ProcessType>> findProcessType() {
     List<ProcessType> processTypeList = processTypeService.findProcessType();
     return Result.ok(processTypeList);
+  }
+
+  @ApiOperation("查看审批详情信息")
+  @GetMapping("/show/{id}")
+  public Result<Map<String, Object>> show(@PathVariable("id") Long processId) {
+    Map<String, Object> map = processService.show(processId);
+    return Result.ok(map);
   }
 }
