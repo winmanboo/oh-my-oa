@@ -2,7 +2,7 @@ import axios from "axios";
 
 // 创建axios实例
 const service = axios.create({
-  baseURL: "http://localhost:8800", // api 的 base_url
+  baseURL: "http://2e7e359f.r2.cpolar.cn", // api 的 base_url
   timeout: 30000 // 请求超时时间
 });
 

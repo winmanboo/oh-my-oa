@@ -9,4 +9,6 @@ public class WechatAccountProperties {
   private String mpAppId;
 
   private String mpAppSecret;
+
+  private String userInfoUrl;
 }

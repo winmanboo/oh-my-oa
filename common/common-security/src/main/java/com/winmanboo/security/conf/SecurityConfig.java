@@ -74,7 +74,16 @@ public class SecurityConfig {
    */
   @Bean
   public WebSecurityCustomizer webSecurityCustomizer() {
-    return web -> web.ignoring().antMatchers("/favicon.ico",
+    return web -> web.ignoring().antMatchers(
+        "/admin/modeler/**",
+        "/diagram-viewer/**",
+        "/editor-app/**",
+        "/*.html",
+        "/admin/processImage/**",
+        "/admin/wechat/authorize",
+        "/admin/wechat/userInfo",
+        "/admin/wechat/bindPhone",
+        "/favicon.ico",
         "/swagger-resources/**",
         "/webjars/**",
         "/v2/**",
