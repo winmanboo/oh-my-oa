@@ -18,14 +18,16 @@ public class CodeGen {
         })
         .packageConfig(builder -> {
           builder.parent("com.winmanboo.oh_my_oa") // 设置父包名
-              .moduleName("process") // 设置父包模块名
+              .moduleName("wechat") // 设置父包模块名
               .controller("controller")
               .service("service")
               .mapper("mapper")
               .pathInfo(Collections.singletonMap(OutputFile.xml, "/Users/wangzhiming/StudyProjects/oh-my-oa/service-oa/src/main/resources/mapper")); // 设置mapperXml生成路径
         })
         .strategyConfig(builder -> {
-          builder.addInclude("oa_process_record") // 设置需要生成的表名
+          builder
+              .addTablePrefix("wechat_") // 过滤掉表的前缀
+              .addInclude("wechat_menu") // 设置需要生成的表名
               .entityBuilder() // 实体类配置
               .naming(NamingStrategy.underline_to_camel) // 数据库表映射到实体的命名策略
               .columnNaming(NamingStrategy.underline_to_camel) // 数据库表映射到实体的命名策略
