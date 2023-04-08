@@ -291,8 +291,16 @@ public class OaProcessServiceImpl extends ServiceImpl<OaProcessMapper, Process> 
     return pageModel;
   }
 
+  @Override
+  public IPage<ProcessVo> findStarted(Page<ProcessVo> pageParam) {
+    ProcessQueryVo processQueryVo = new ProcessQueryVo();
+    processQueryVo.setUserId(LoginUserInfoHelper.getUserId());
+    return baseMapper.selectPageVo(pageParam, processQueryVo);
+  }
+
   /**
    * 结束流程
+   *
    * @param taskId 任务id
    */
   private void endTask(String taskId) {

@@ -40,4 +40,6 @@ public interface OaProcessService extends IService<Process> {
   void approve(ApprovalVo approvalVo);
 
   IPage<ProcessVo> findProcessed(Page<Process> pageParam);
+
+  IPage<ProcessVo> findStarted(Page<ProcessVo> pageParam);
 }
