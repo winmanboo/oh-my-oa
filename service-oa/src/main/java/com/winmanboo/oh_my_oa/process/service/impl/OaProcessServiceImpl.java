@@ -11,6 +11,7 @@ import com.winmanboo.model.process.ProcessTemplate;
 import com.winmanboo.model.system.SysUser;
 import com.winmanboo.oh_my_oa.auth.service.SysUserService;
 import com.winmanboo.oh_my_oa.process.mapper.OaProcessMapper;
+import com.winmanboo.oh_my_oa.process.service.OaProcessRecordService;
 import com.winmanboo.oh_my_oa.process.service.OaProcessService;
 import com.winmanboo.oh_my_oa.process.service.OaProcessTemplateService;
 import com.winmanboo.security.helper.LoginUserInfoHelper;
@@ -53,6 +54,8 @@ public class OaProcessServiceImpl extends ServiceImpl<OaProcessMapper, Process> 
   private final RuntimeService runtimeService;
 
   private final TaskService taskService;
+
+  private final OaProcessRecordService processRecordService;
 
   @Override
   public IPage<ProcessVo> selectPage(Page<ProcessVo> pageParam, ProcessQueryVo processQueryVo) {
@@ -121,6 +124,9 @@ public class OaProcessServiceImpl extends ServiceImpl<OaProcessMapper, Process> 
     process.setProcessInstanceId(processInstance.getId());
     process.setDescription("等待" + String.join(",", realNameList) + "审批");
     this.updateById(process);
+
+    // 记录操作审批信息记录
+    processRecordService.record(process.getId(), 1, "发起申请");
   }
 
   /**
