@@ -24,6 +24,13 @@ import java.util.List;
 public class MenuController {
   private final MenuService menuService;
 
+  @ApiOperation("同步菜单")
+  @GetMapping("/syncMenu")
+  public Result<Void> createMenu() {
+    menuService.syncMenu();
+    return Result.ok();
+  }
+
   //@PreAuthorize("hasAuthority('bnt.menu.list')")
   @ApiOperation(value = "获取")
   @GetMapping("get/{id}")

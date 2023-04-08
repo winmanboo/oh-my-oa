@@ -1,10 +1,17 @@
 package com.winmanboo.oh_my_oa.wechat.service.impl;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.winmanboo.common.exception.OhMyOaException;
 import com.winmanboo.model.wechat.Menu;
 import com.winmanboo.oh_my_oa.wechat.mapper.MenuMapper;
 import com.winmanboo.oh_my_oa.wechat.service.MenuService;
 import com.winmanboo.vo.wechat.MenuVo;
+import io.jsonwebtoken.lang.Collections;
+import lombok.RequiredArgsConstructor;
+import me.chanjar.weixin.common.error.WxErrorException;
+import me.chanjar.weixin.mp.api.WxMpService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +28,9 @@ import java.util.stream.Collectors;
  * @since 2023-04-08
  */
 @Service
+@RequiredArgsConstructor
 public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements MenuService {
+  private final WxMpService wxMpService;
 
   @Override
   public List<MenuVo> findMenuInfo() {
@@ -47,5 +56,46 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
       menuVo.setChildren(twoMenuList);
       return menuVo;
     }).collect(Collectors.toList());
+  }
+
+  @Override
+  public void syncMenu() {
+    // 菜单数据查询出来，封装微信要求的菜单格式
+    List<MenuVo> menuVoList = this.findMenuInfo();
+    JSONArray buttonList = new JSONArray();
+    for (MenuVo oneMenuVo : menuVoList) {
+      JSONObject one = new JSONObject();
+      one.put("name", oneMenuVo.getName());
+      if (Collections.isEmpty(oneMenuVo.getChildren())) {
+        one.put("type", oneMenuVo.getType());
+        one.put("url", "http://");
+      } else {
+        JSONArray subButton = new JSONArray();
+        for (MenuVo twoMenuVo : oneMenuVo.getChildren()) {
+          JSONObject view = new JSONObject();
+          view.put("type", twoMenuVo.getType());
+          if (twoMenuVo.getType().equals("view")) {
+            view.put("name", twoMenuVo.getName());
+            // H5 页面地址
+            view.put("url", "");
+          } else {
+            view.put("name", twoMenuVo.getName());
+            view.put("key", twoMenuVo.getMeunKey());
+          }
+          subButton.add(view);
+        }
+        one.put("sub_button", subButton);
+      }
+      buttonList.add(one);
+    }
+    // 菜单
+    JSONObject button = new JSONObject();
+    button.put("button", buttonList);
+    try {
+      // 调用工具里面的方法实现菜单推送
+      wxMpService.getMenuService().menuCreate(button.toJSONString());
+    } catch (WxErrorException e) {
+      throw new OhMyOaException("推送失败");
+    }
   }
 }
