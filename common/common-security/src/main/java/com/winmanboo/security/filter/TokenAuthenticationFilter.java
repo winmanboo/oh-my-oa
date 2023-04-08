@@ -5,6 +5,7 @@ import com.winmanboo.common.jwt.JwtHelper;
 import com.winmanboo.common.result.Result;
 import com.winmanboo.common.result.ResultCodeEnum;
 import com.winmanboo.common.utils.ResponseUtils;
+import com.winmanboo.security.helper.LoginUserInfoHelper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -55,6 +56,9 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
     if (StringUtils.hasText(token)) {
       String username = JwtHelper.getUsername(token);
       if (StringUtils.hasText(username)) {
+        // 将当前用户信息放到 ThreadLocal 中
+        LoginUserInfoHelper.setUserId(JwtHelper.getUserId(token));
+        LoginUserInfoHelper.setUsername(JwtHelper.getUsername(token));
         // 通过用户名从 redis 中获取权限数据
         String authorityStr = (String) redisTemplate.opsForValue().get(username);
         if (StringUtils.hasText(authorityStr)) {

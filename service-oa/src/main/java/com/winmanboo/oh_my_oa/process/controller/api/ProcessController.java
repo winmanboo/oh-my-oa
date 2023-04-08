@@ -3,8 +3,10 @@ package com.winmanboo.oh_my_oa.process.controller.api;
 import com.winmanboo.common.result.Result;
 import com.winmanboo.model.process.ProcessTemplate;
 import com.winmanboo.model.process.ProcessType;
+import com.winmanboo.oh_my_oa.process.service.OaProcessService;
 import com.winmanboo.oh_my_oa.process.service.OaProcessTemplateService;
 import com.winmanboo.oh_my_oa.process.service.OaProcessTypeService;
+import com.winmanboo.vo.process.ProcessFormVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +23,15 @@ public class ProcessController {
   private final OaProcessTypeService processTypeService;
 
   private final OaProcessTemplateService processTemplateService;
+
+  private final OaProcessService processService;
+
+  @ApiOperation("启动流程")
+  @PostMapping("/startUp")
+  public Result<Void> startUp(@RequestBody ProcessFormVo processFormVo) {
+    processService.startUp(processFormVo);
+    return Result.ok();
+  }
 
   @ApiOperation("获取审批模版数据")
   @GetMapping("/getProcessTemplate/{processTemplateId}")
