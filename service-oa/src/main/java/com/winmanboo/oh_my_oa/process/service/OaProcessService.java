@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.winmanboo.model.process.Process;
+import com.winmanboo.vo.process.ApprovalVo;
 import com.winmanboo.vo.process.ProcessFormVo;
 import com.winmanboo.vo.process.ProcessQueryVo;
 import com.winmanboo.vo.process.ProcessVo;
@@ -35,4 +36,6 @@ public interface OaProcessService extends IService<Process> {
   IPage<ProcessVo> findPending(Page<Process> pageParam);
 
   Map<String, Object> show(Long processId);
+
+  void approve(ApprovalVo approvalVo);
 }

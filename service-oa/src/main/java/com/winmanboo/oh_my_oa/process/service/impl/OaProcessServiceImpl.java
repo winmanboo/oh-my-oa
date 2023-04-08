@@ -16,10 +16,16 @@ import com.winmanboo.oh_my_oa.process.service.OaProcessRecordService;
 import com.winmanboo.oh_my_oa.process.service.OaProcessService;
 import com.winmanboo.oh_my_oa.process.service.OaProcessTemplateService;
 import com.winmanboo.security.helper.LoginUserInfoHelper;
+import com.winmanboo.vo.process.ApprovalVo;
 import com.winmanboo.vo.process.ProcessFormVo;
 import com.winmanboo.vo.process.ProcessQueryVo;
 import com.winmanboo.vo.process.ProcessVo;
+import io.jsonwebtoken.lang.Collections;
 import lombok.RequiredArgsConstructor;
+import org.activiti.bpmn.model.BpmnModel;
+import org.activiti.bpmn.model.EndEvent;
+import org.activiti.bpmn.model.FlowNode;
+import org.activiti.bpmn.model.SequenceFlow;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
@@ -195,6 +201,96 @@ public class OaProcessServiceImpl extends ServiceImpl<OaProcessMapper, Process> 
         "processTemplate", processTemplate,
         "isApprove", isApprove
     );
+  }
+
+  @Override
+  public void approve(ApprovalVo approvalVo) {
+    // 从 approvalVo 获取任务 id，根据任务 id 获取流程变量
+    String taskId = approvalVo.getTaskId();
+    Map<String, Object> variables = taskService.getVariables(taskId);
+    for (Map.Entry<String, Object> entry : variables.entrySet()) {
+      System.out.println(entry.getKey());
+      System.out.println(entry.getValue());
+    }
+
+    // 判断审批状态值
+    // 状态值为 1 表示审批通过
+    // 状态值为 -1 表示驳回，流程直接结束
+    if (approvalVo.getStatus() == 1) {
+      taskService.complete(taskId);
+    } else {
+      this.endTask(taskId);
+    }
+
+    // 记录审批相关过程信息 -> oa_process_record
+    String desc = approvalVo.getStatus() == 1 ? "已通过" : "驳回";
+    processRecordService.record(approvalVo.getProcessId(), approvalVo.getStatus(), desc);
+
+    // 查询下一个审批人，更新流程表中的记录 -> oa_process
+    Process process = this.getById(approvalVo.getProcessId());
+    // 查询任务
+    List<Task> taskList = this.getCurrentTaskList(process.getProcessInstanceId());
+    if (!Collections.isEmpty(taskList)) {
+      List<String> realNameList = taskList.stream().map(task -> {
+        String assignee = task.getAssignee();
+        SysUser user = userService.getUserByUsername(assignee);
+        return user.getName();
+      }).toList();
+      // TODO: 2023/4/8 公共号的方式进行消息推送
+
+      // 更新 process 流程信息
+      process.setDescription("等待" + String.join(",", realNameList) + "审批");
+      process.setStatus(1);
+    } else {
+      if (approvalVo.getStatus() == 1) { // 同意
+        process.setDescription("审批完成（通过）");
+        process.setStatus(2);
+      } else {
+        process.setDescription("审批完成（驳回）");
+        process.setStatus(-1);
+      }
+    }
+    this.updateById(process);
+  }
+
+  /**
+   * 结束流程
+   * @param taskId 任务id
+   */
+  private void endTask(String taskId) {
+    // 根据 taskId 获取任务对象
+    Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
+
+    // 获取流程定义模型 BpmnModel
+    BpmnModel bpmnModel = repositoryService.getBpmnModel(task.getProcessDefinitionId());
+
+    // 获取结束的流向节点
+    List<EndEvent> endEventList = bpmnModel.getMainProcess().findFlowElementsOfType(EndEvent.class);
+    if (endEventList.isEmpty()) return;
+    FlowNode endFlowNode = endEventList.get(0);
+
+    // 获取当前的流向节点
+    FlowNode currentFlowNode = (FlowNode) bpmnModel.getMainProcess().getFlowElement(task.getTaskDefinitionKey());
+
+    // 临时保存当前活动的原始方向（可选）
+    List<SequenceFlow> originalSequenceFlowList = new ArrayList<>(currentFlowNode.getOutgoingFlows());
+
+    // 清理当前流动方向
+    currentFlowNode.getOutgoingFlows().clear();
+
+    // 创建新的流向
+    SequenceFlow sequenceFlow = new SequenceFlow();
+    sequenceFlow.setId("newSequenceFlow");
+    sequenceFlow.setSourceFlowElement(currentFlowNode);
+    sequenceFlow.setTargetFlowElement(endFlowNode);
+
+    // 当前节点指向新的方向
+    List<SequenceFlow> sequenceFlowList = new ArrayList<>();
+    sequenceFlowList.add(sequenceFlow);
+    currentFlowNode.setOutgoingFlows(sequenceFlowList);
+
+    // 完成当前任务
+    taskService.complete(taskId);
   }
 
   /**

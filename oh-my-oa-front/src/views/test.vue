@@ -26,14 +26,14 @@ export default {
   methods: {
     admin() {
       window.localStorage.setItem('token', '');
-      let token = 'eyJhbGciOiJIUzI1NiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAA_6tWKi5NUrJScgwN8dANDXYNUtJRSq0oULIyNLMwNDAyNDAz1FEqLU4t8kwBikGYeYm5qUAtiSm5mXlKtQCiv-JQQgAAAA.aldXiG-Od9JhVfEd71PN4rn84s_c8ubamkekqbdA-SI'
+      let token = 'eyJhbGciOiJIUzI1NiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAA_6tWKi5NUrJScgwN8dANDXYNUtJRSq0oULIyNLMwNDA2Mjcx0FEqLU4t8kwBikGYeYm5qUAtiSm5mXlKtQDgxvEtQgAAAA.415BjaKhP9bSfBWuluTc8_gQPf47W6Jp95hl6AQ2bRA'
       window.localStorage.setItem('token', token);
       this.token = window.localStorage.getItem('token')
     },
 
     zhangsan() {
       window.localStorage.setItem('token', '');
-      let token = 'eyJhbGciOiJIUzI1NiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAA_6tWKi5NUrJScgwN8dANDXYNUtJRSq0oULIyNLMwNDAyMTA11lEqLU4t8kxRsjKHMPMSc1OBWqoyEvPSixPzlGoBbDHCFkUAAAA.oHREmdJnYHZlDpWxUvYP5r5hKCV49fYFF6hIstPmeBM'
+      let token = 'eyJhbGciOiJIUzI1NiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAA_6tWKi5NUrJScgwN8dANDXYNUtJRSq0oULIyNLMwNDA2Mjc11FEqLU4t8kxRsjKHMPMSc1OBWqoyEvPSixPzlGoBBXrks0UAAAA.-4kRsamm8UcClKtImqyU1RaDChsTHcxPhlPKnxU_mCU'
       window.localStorage.setItem('token', token);
       this.token = window.localStorage.getItem('token')
     },
@@ -47,7 +47,7 @@ export default {
 
     lisi() {
       window.localStorage.setItem('token', '');
-      let token = 'eyJhbGciOiJIUzI1NiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAA_6tWKi5NUrJScgwN8dANDXYNUtJRSq0oULIyNLMwNDAyMDU01VEqLU4t8kxRsjKBMPMSc1OBWnIyizOVagFDtk7aQQAAAA.tu8QmsaWsKK7BXeaYlyHzzIrb4RYAsaFWBk8ck9GMws'
+      let token = 'eyJhbGciOiJIUzI1NiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAA_6tWKi5NUrJScgwN8dANDXYNUtJRSq0oULIyNLMwNDA2sjA301EqLU4t8kxRsjKBMPMSc1OBWnIyizOVagFNf26HQQAAAA.rzoQE_JUrdeMqNgQSJ0NSIt7DHGtdrlk30PtVu3MiX8'
       window.localStorage.setItem('token', token);
       this.token = window.localStorage.getItem('token')
     }

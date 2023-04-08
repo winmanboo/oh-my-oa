@@ -9,6 +9,7 @@ import com.winmanboo.model.process.ProcessType;
 import com.winmanboo.oh_my_oa.process.service.OaProcessService;
 import com.winmanboo.oh_my_oa.process.service.OaProcessTemplateService;
 import com.winmanboo.oh_my_oa.process.service.OaProcessTypeService;
+import com.winmanboo.vo.process.ApprovalVo;
 import com.winmanboo.vo.process.ProcessFormVo;
 import com.winmanboo.vo.process.ProcessVo;
 import io.swagger.annotations.Api;
@@ -66,5 +67,12 @@ public class ProcessController {
   public Result<Map<String, Object>> show(@PathVariable("id") Long processId) {
     Map<String, Object> map = processService.show(processId);
     return Result.ok(map);
+  }
+
+  @ApiOperation("审批")
+  @PostMapping("/approve")
+  public Result<Void> approve(@RequestBody ApprovalVo approvalVo) {
+    processService.approve(approvalVo);
+    return Result.ok();
   }
 }
