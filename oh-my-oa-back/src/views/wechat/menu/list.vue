@@ -5,6 +5,7 @@
     <div class="tools-div">
       <el-button class="btn-add" size="mini" @click="add">添 加</el-button>
       <el-button class="btn-add" size="mini" @click="syncMenu">同步菜单</el-button>
+      <el-button class="btn-add" size="mini" @click="removeMenu">删除菜单</el-button>
     </div>
 
     <el-table
@@ -104,6 +105,11 @@ export default {
   },
 
   methods: {
+    removeMenu() {
+      menuApi.removeMenu().then(response => {
+        this.$message.success('菜单已删除')
+      })
+    },
     syncMenu() {
       this.$confirm('你确定上传菜单吗, 是否继续?', '提示', {
         confirmButtonText: '确定',

@@ -45,5 +45,12 @@ export default {
       url: `${api_name}/remove/${id}`,
       method: 'delete'
     })
+  },
+
+  removeMenu() {
+    return request({
+      url: `${api_name}/removeMenu`,
+      method: `delete`
+    })
   }
 }
