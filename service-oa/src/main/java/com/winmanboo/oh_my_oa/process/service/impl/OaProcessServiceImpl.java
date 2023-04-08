@@ -25,13 +25,16 @@ import org.activiti.engine.TaskService;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
+import org.activiti.engine.task.TaskQuery;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import java.util.zip.ZipInputStream;
 
 /**
@@ -127,6 +130,42 @@ public class OaProcessServiceImpl extends ServiceImpl<OaProcessMapper, Process> 
 
     // 记录操作审批信息记录
     processRecordService.record(process.getId(), 1, "发起申请");
+  }
+
+  @Override
+  public IPage<ProcessVo> findPending(Page<Process> pageParam) {
+    // 封装查询的条件，根据当前登陆的用户名
+    TaskQuery query = taskService.createTaskQuery()
+        .taskAssignee(LoginUserInfoHelper.getUsername())
+        .orderByTaskCreateTime()
+        .desc();
+
+    // 调用方法，进行分页条件查询，返回代办任务集合
+    long begin = (pageParam.getCurrent() - 1) * pageParam.getSize();
+    long size = pageParam.getSize();
+    List<Task> taskList = query.listPage((int) begin, (int) size);
+    long totalCount = query.count();
+
+    // 封装返回 list 集合数据到 List<ProcessVo> 中
+    List<ProcessVo> processVoList = taskList.stream().filter(task -> StringUtils.hasText(task.getBusinessKey()))
+        .map(task -> {
+          /*String processInstanceId = task.getProcessInstanceId();
+          ProcessInstance processInstance = runtimeService.createProcessInstanceQuery()
+              .processInstanceId(processInstanceId)
+              .singleResult();
+          String businessKey = processInstance.getBusinessKey(); // processId*/
+          String businessKey = task.getBusinessKey();
+          Process process = this.getById(Long.parseLong(businessKey));
+          ProcessVo processVo = new ProcessVo();
+          BeanUtils.copyProperties(process, process);
+          processVo.setTaskId(task.getId());
+          return processVo;
+        }).collect(Collectors.toList());
+
+    // 封装返回 page 对象
+    IPage<ProcessVo> page = new Page<>(pageParam.getCurrent(), pageParam.getSize(), totalCount);
+    page.setRecords(processVoList);
+    return page;
   }
 
   /**

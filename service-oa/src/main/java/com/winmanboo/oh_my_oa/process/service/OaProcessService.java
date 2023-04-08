@@ -26,4 +26,9 @@ public interface OaProcessService extends IService<Process> {
   void deployByZip(String deployPath);
 
   void startUp(ProcessFormVo processFormVo);
+
+  /**
+   * 查询代办任务列表
+   */
+  IPage<ProcessVo> findPending(Page<Process> pageParam);
 }
