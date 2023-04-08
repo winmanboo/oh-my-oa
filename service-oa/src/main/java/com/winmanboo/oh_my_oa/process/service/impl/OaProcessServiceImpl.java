@@ -32,9 +32,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import java.util.zip.ZipInputStream;
 
 /**
@@ -147,20 +147,21 @@ public class OaProcessServiceImpl extends ServiceImpl<OaProcessMapper, Process> 
     long totalCount = query.count();
 
     // 封装返回 list 集合数据到 List<ProcessVo> 中
-    List<ProcessVo> processVoList = taskList.stream().filter(task -> StringUtils.hasText(task.getBusinessKey()))
-        .map(task -> {
-          /*String processInstanceId = task.getProcessInstanceId();
-          ProcessInstance processInstance = runtimeService.createProcessInstanceQuery()
-              .processInstanceId(processInstanceId)
-              .singleResult();
-          String businessKey = processInstance.getBusinessKey(); // processId*/
-          String businessKey = task.getBusinessKey();
-          Process process = this.getById(Long.parseLong(businessKey));
-          ProcessVo processVo = new ProcessVo();
-          BeanUtils.copyProperties(process, process);
-          processVo.setTaskId(task.getId());
-          return processVo;
-        }).collect(Collectors.toList());
+    List<ProcessVo> processVoList = new ArrayList<>();
+    for (Task task : taskList) {
+      String processInstanceId = task.getProcessInstanceId();
+      ProcessInstance processInstance = runtimeService.createProcessInstanceQuery()
+          .processInstanceId(processInstanceId)
+          .singleResult();
+      String businessKey = processInstance.getBusinessKey(); // processId
+      if (!StringUtils.hasText(businessKey)) continue;
+      Process process = this.getById(Long.parseLong(businessKey));
+      if (process == null) continue;
+      ProcessVo processVo = new ProcessVo();
+      BeanUtils.copyProperties(process, processVo);
+      processVo.setTaskId(task.getId());
+      processVoList.add(processVo);
+    }
 
     // 封装返回 page 对象
     IPage<ProcessVo> page = new Page<>(pageParam.getCurrent(), pageParam.getSize(), totalCount);
