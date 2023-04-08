@@ -4,6 +4,7 @@
     <!-- 工具条 -->
     <div class="tools-div">
       <el-button class="btn-add" size="mini" @click="add">添 加</el-button>
+      <el-button class="btn-add" size="mini" @click="syncMenu">同步菜单</el-button>
     </div>
 
     <el-table
@@ -103,6 +104,22 @@ export default {
   },
 
   methods: {
+    syncMenu() {
+      this.$confirm('你确定上传菜单吗, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        return menuApi.syncMenu()
+      }).then((response) => {
+        this.$message.success(response.message)
+      }).catch(error => {
+        console.log('error', error)
+        if (error === 'cancel') {
+          this.$message.info('取消上传')
+        }
+      })
+    },
     // 调用api层获取数据库中的数据
     fetchData() {
       console.log('加载列表')

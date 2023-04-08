@@ -3,6 +3,12 @@ import request from '@/utils/request'
 const api_name = '/admin/wechat/menu'
 
 export default {
+  syncMenu() {
+    return request({
+      url: `${api_name}/syncMenu`,
+      method: 'get'
+    })
+  },
 
   findMenuInfo() {
     return request({
