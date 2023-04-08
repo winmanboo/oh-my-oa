@@ -26,9 +26,12 @@ import org.activiti.bpmn.model.BpmnModel;
 import org.activiti.bpmn.model.EndEvent;
 import org.activiti.bpmn.model.FlowNode;
 import org.activiti.bpmn.model.SequenceFlow;
+import org.activiti.engine.HistoryService;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
+import org.activiti.engine.history.HistoricTaskInstance;
+import org.activiti.engine.history.HistoricTaskInstanceQuery;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
@@ -64,6 +67,8 @@ public class OaProcessServiceImpl extends ServiceImpl<OaProcessMapper, Process> 
   private final RuntimeService runtimeService;
 
   private final TaskService taskService;
+
+  private final HistoryService historyService;
 
   private final OaProcessRecordService processRecordService;
 
@@ -251,6 +256,39 @@ public class OaProcessServiceImpl extends ServiceImpl<OaProcessMapper, Process> 
       }
     }
     this.updateById(process);
+  }
+
+  @Override
+  public IPage<ProcessVo> findProcessed(Page<Process> pageParam) {
+    // 封装查询条件
+    HistoricTaskInstanceQuery query = historyService.createHistoricTaskInstanceQuery()
+        .taskAssignee(LoginUserInfoHelper.getUsername())
+        .finished() // 已经完成的任务
+        .orderByTaskCreateTime()
+        .desc();
+
+    // 调用方法进行分页查询，返回 list 集合
+    long begin = (pageParam.getCurrent() - 1) * pageParam.getSize();
+    long size = pageParam.getSize();
+    List<HistoricTaskInstance> list = query.listPage((int) begin, (int) size);
+    long totalCount = query.count();
+
+    List<ProcessVo> processVoList = new ArrayList<>();
+    // 遍历集合，封装成 List<ProcessVo>
+    for (HistoricTaskInstance item : list) {
+      // 流程实例 id
+      String processInstanceId = item.getProcessInstanceId();
+      // 根据流程实例id查询获取 process 信息
+      Process process = lambdaQuery().eq(Process::getProcessInstanceId, processInstanceId).one();
+      ProcessVo processVo = new ProcessVo();
+      BeanUtils.copyProperties(process, processVo);
+      processVoList.add(processVo);
+    }
+
+    // IPage 封装分页查询所有数据并返回
+    IPage<ProcessVo> pageModel = new Page<>(pageParam.getCurrent(), pageParam.getSize(), totalCount);
+    pageModel.setRecords(processVoList);
+    return pageModel;
   }
 
   /**

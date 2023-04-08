@@ -38,4 +38,6 @@ public interface OaProcessService extends IService<Process> {
   Map<String, Object> show(Long processId);
 
   void approve(ApprovalVo approvalVo);
+
+  IPage<ProcessVo> findProcessed(Page<Process> pageParam);
 }
