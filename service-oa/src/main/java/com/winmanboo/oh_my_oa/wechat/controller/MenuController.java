@@ -19,7 +19,7 @@ import java.util.List;
  * @since 2023-04-08
  */
 @RestController
-@RequestMapping("/wechat/menu")
+@RequestMapping("/admin/wechat/menu")
 @RequiredArgsConstructor
 public class MenuController {
   private final MenuService menuService;
