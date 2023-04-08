@@ -7,7 +7,8 @@ import com.winmanboo.model.process.ProcessTemplate;
 import com.winmanboo.oh_my_oa.process.mapper.OaProcessTemplateMapper;
 import com.winmanboo.oh_my_oa.process.service.OaProcessService;
 import com.winmanboo.oh_my_oa.process.service.OaProcessTemplateService;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -22,9 +23,13 @@ import java.util.List;
  * @since 2023-04-04
  */
 @Service
-@RequiredArgsConstructor
 public class OaProcessTemplateServiceImpl extends ServiceImpl<OaProcessTemplateMapper, ProcessTemplate> implements OaProcessTemplateService {
   private final OaProcessService processService;
+
+  @Autowired
+  public OaProcessTemplateServiceImpl(@Lazy OaProcessService processService) {
+    this.processService = processService;
+  }
 
   @Override
   public IPage<ProcessTemplate> selectPageProcessTemplate(Page<ProcessTemplate> pageParam) {
