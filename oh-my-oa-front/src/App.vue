@@ -4,7 +4,7 @@
 
         <el-dialog title="绑定手机" :visible.sync="dialogVisible" width="80%">
             <el-form ref="dataForm" :model="bindPhoneVo" size="small">
-                <h4>绑定你的手机号，建立云尚办公系统关联关系</h4>
+                <h4>绑定你的手机号，建立办公系统关联关系</h4>
                 <el-form-item label="手机号码">
                     <el-input v-model="bindPhoneVo.phone"/>
                 </el-form-item>
@@ -38,10 +38,11 @@ export default {
   methods: {
     wechatLogin() {
       // 处理微信授权登录
+      debugger
       let token = this.getQueryString('token') || '';
       let openId = this.getQueryString('openId') || '';
       // token === '' && openId != '' 只要这种情况，未绑定账号
-      if (token === '' && openId !== '') {
+      if (token === "" && openId != "") {
         // 绑定账号
         this.bindPhoneVo.openId = openId
         this.dialogVisible = true
@@ -53,7 +54,7 @@ export default {
         token = window.localStorage.getItem('token') || '';
         if (token === '') {
           let url = window.location.href.replace('#', 'ohmyoa')
-          window.location = 'http://2e7e359f.r2.cpolar.cn/admin/wechat/authorize?returnUrl=' + url
+          window.location = 'http://687417f1.r2.cpolar.cn/admin/wechat/authorize?returnUrl=' + url
         }
       }
     },
@@ -66,7 +67,7 @@ export default {
       userInfoApi.bindPhone(this.bindPhoneVo).then(response => {
         window.localStorage.setItem('token', response.data);
         this.dialogVisible = false
-        window.location = 'http://oa.atguigu.cn'
+        window.location = 'http://452c25a4.r2.cpolar.cn'
       })
     },
 

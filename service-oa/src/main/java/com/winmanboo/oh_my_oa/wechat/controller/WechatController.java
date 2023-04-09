@@ -41,6 +41,7 @@ public class WechatController {
     // 第三个参数：授权成功之后，跳转路径，替换 ohmyoa 为 #，因为请求路径中带有#号在回调的时候会有问题
     String redirectUrl = wxMpService.getOAuth2Service().buildAuthorizationUrl(userInfoUrl, WxConsts.OAuth2Scope.SNSAPI_USERINFO,
         URLEncoder.encode(returnUrl.replace("ohmyoa", "#"), StandardCharsets.UTF_8));
+    log.info("redirectUrl: {}", redirectUrl);
     return "redirect:" + redirectUrl;
   }
 
@@ -63,7 +64,7 @@ public class WechatController {
       token = JwtHelper.createToken(sysUser.getId(), sysUser.getUsername());
     }
 
-    if(!returnUrl.contains("?")) {
+    if (!returnUrl.contains("?")) {
       return "redirect:" + returnUrl + "?token=" + token + "&openId=" + openId;
     } else {
       return "redirect:" + returnUrl + "&token=" + token + "&openId=" + openId;
@@ -77,7 +78,7 @@ public class WechatController {
     // 根据手机号查询数据库
     SysUser sysUser = userService.lambdaQuery().eq(SysUser::getPhone, bindPhoneVo.getPhone()).one();
     // 如果存在更新记录 openId
-    if(null != sysUser) {
+    if (null != sysUser) {
       sysUser.setOpenId(bindPhoneVo.getOpenId());
       userService.updateById(sysUser);
 
